@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Display CSV Data</title>
+  <style>
+    table {
+      font-size: 25px;
+    }
+
+    .dataframe {
+      display: none;
+    }
+
+    th {
+      min-width: 150px;
+      text-align: center;
+    }
+
+    td {
+      text-align: center;
+    }
+
+    #gridContainer {
+      height: 100%;
+    }
+
+    .options {
+      padding: 20px;
+      margin-top: 20px;
+      background-color: rgba(191, 191, 191, 0.15);
+    }
+
+    .caption {
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .option {
+      margin-top: 10px;
+    }
+
+    .option>span {
+      margin-right: 10px;
+    }
+
+    .option>.dx-selectbox {
+      display: inline-block;
+      vertical-align: middle;
+    }
+  </style>
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write(decodeURIComponent('%3Cscript src="js/jquery.min.js"%3E%3C/script%3E'))</script>
+  <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/22.2.6/css/dx.light.css" />
+  <script src="https://cdn3.devexpress.com/jslib/22.2.6/js/dx.all.js"></script>
+</head>
+
+<body>
+  <!-- <h1>CSV Data:</h1> -->
+  {{ data|safe }}
+
+
+  <div class="demo-container">
+    <div id="gridContainer"></div>
+  </div>
+  <script>
+    debugger;
+    var _datasource = [];
+    var tables = document.getElementsByTagName("table");
+    var table = tables[0];
+    var rows = table.rows;
+    var cells, t;
+    var results = [];
+    for (var i = 0; i < rows.length; i++) {
+      cells = rows[i].cells;
+      t = [];
+
+      for (var j = 0; j < cells.length; j++) {
+        t.push(cells[j].textContent);
+      }
+      results.push(t);
+    }
+
+    console.log(results);
+    for (var i = 1; i < results.length; i++) {
+      _datasource.push({ sl: results[i][0], isp: results[i][1], count: results[i][2] });
+    }
+
+    const dataGrid = $('#gridContainer').dxDataGrid({
+      dataSource: _datasource,
+      keyExpr: 'sl',
+      columnsAutoWidth: true,
+      showBorders: true,
+      filterRow: {
+        visible: true,
+        applyFilter: 'auto',
+      },
+      searchPanel: {
+        visible: true,
+        placeholder: 'Search...',
+      },
+      headerFilter: {
+        visible: true,
+      },
+      columns: [
+        // {
+        //   dataField: 'sl',
+        //   caption: 'Sira',
+        // }, 
+        {
+          dataField: 'isp',
+          caption: 'ISP',
+          alignment: 'right',
+        },
+        {
+          dataField: 'count',
+          caption: 'Count',
+          alignment: 'right',
+        }],
+    }).dxDataGrid('instance');
+
+  </script>
+</body>
+
+</html>
